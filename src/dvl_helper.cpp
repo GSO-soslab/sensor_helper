@@ -116,11 +116,15 @@ void DvlHelper::glrcBtCallback(const nortek_dvl::ButtomTrack::ConstPtr& msg) {
     pub_pointcloud.publish(cloud_msg);
 }
 
+// DVL Gauge pressure reading in the air: 0.37 dbar
+// fluid_pressure should be Absolute pressure reading in Pascals
+// however, here it use Gauge pressure in dbar, absolute pressure = Gauge pressure + atmospheric pressure(10.1325 dbar)
 void DvlHelper::glrcCpCallback(const nortek_dvl::CurrentProfile::ConstPtr& msg) {
 
     sensor_msgs::FluidPressure msg_out;
     msg_out.header = msg->header;
-    msg_out.fluid_pressure = msg->pressure; //dBar
+    // msg_out.fluid_pressure = msg->pressure; //dBar
+    msg_out.fluid_pressure = (msg->pressure + 10.1325) * 10000;
     msg_out.variance = pow(msg->pressure_std_dev,2);
     pub_pressure.publish(msg_out);
 }
