@@ -194,7 +194,6 @@ void DvlHelper::alaskaBtCallback(const ds_sensor_msgs::NortekDF21::ConstPtr& msg
     sensor_msgs::FluidPressure msg_pressure;
     msg_pressure.header = msg->header;
     //Bar-> meter
-    // msg_pressure.fluid_pressure = msg->pressure * 10; 
     msg_pressure.fluid_pressure = (msg->pressure + 1.01325) * 100000;
     msg_pressure.variance = 0;
     pub_pressure.publish(msg_pressure);
@@ -205,7 +204,6 @@ void DvlHelper::alaskaCpCallback(const ds_sensor_msgs::NortekDF3::ConstPtr& msg)
     sensor_msgs::FluidPressure msg_out;
     msg_out.header = msg->header;
     //Bar
-    // msg_out.fluid_pressure = msg->pressure * 10; 
     msg_out.fluid_pressure = (msg->pressure + 1.01325) * 100000; 
     msg_out.variance = 0;
     pub_pressure.publish(msg_out);
