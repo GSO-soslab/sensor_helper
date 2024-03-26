@@ -73,6 +73,9 @@ target_link_libraries(truth_helper_node ${thirdparty_libraries})
 add_executable(fls_helper_node src/fls_helper.cpp)
 target_link_libraries(fls_helper_node ${thirdparty_libraries})
 
+add_executable(sf_helper_node src/sf_helper.cpp)
+target_link_libraries(sf_helper_node ${thirdparty_libraries})
+
 ##########################################
 ############### build test ###############
 ##########################################
