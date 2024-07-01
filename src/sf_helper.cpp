@@ -15,7 +15,7 @@ public:
         sub = nh.subscribe<sensor_msgs::FluidPressure> ("/pressure_in", 1, &HelperSF::callback, this);
         pub = nh.advertise<sensor_msgs::FluidPressure>("/pressure_out",1);
 
-        nh.param<std::string>("frame_id", frame_id, "odom");
+        nh.param<std::string>("frame_id_truth", frame_id_truth, "odom");
     }
 
     ~HelperSF() {}
@@ -31,7 +31,7 @@ private:
     ros::Publisher pub;
 
     // param
-    std::string frame_id;
+    std::string frame_id_truth;
 
     // ground truth path
     ros::Publisher pub_truth_path;
@@ -43,13 +43,13 @@ void HelperSF::callbackTruthOdom(const nav_msgs::Odometry::ConstPtr& msg){
     // ground truth path
     geometry_msgs::PoseStamped pose;
 
-    pose.header.frame_id = frame_id;
+    pose.header.frame_id = frame_id_truth;
     pose.header.stamp = msg->header.stamp;
     pose.pose.position.x = msg->pose.pose.position.x;
     pose.pose.position.y = msg->pose.pose.position.y;
     pose.pose.position.z = msg->pose.pose.position.z;
 
-    path_truth.header.frame_id = frame_id;
+    path_truth.header.frame_id = frame_id_truth;
     path_truth.header.stamp = msg->header.stamp;
     path_truth.poses.push_back(pose);
 

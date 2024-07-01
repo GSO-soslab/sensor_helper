@@ -25,7 +25,6 @@ private:
 
     ros::Subscriber sub;
     ros::Publisher pub;
-
 };
 
 void HelperFLS::callback(const sensor_msgs::Image::ConstPtr& msg){
@@ -34,6 +33,7 @@ void HelperFLS::callback(const sensor_msgs::Image::ConstPtr& msg){
     cv_bridge::CvImagePtr cv_ptr;
     try{
         cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::TYPE_8UC1); // bgr8, MONO8, TYPE_8UC1
+        // cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::MONO8); // bgr8, MONO8, TYPE_8UC1
         // printf("raw img size: rows=%d, cols=%d\n", cv_ptr->image.rows, cv_ptr->image.cols);
     }
     catch (cv_bridge::Exception& e){
@@ -42,7 +42,6 @@ void HelperFLS::callback(const sensor_msgs::Image::ConstPtr& msg){
     }
 
     // ==================== create the map ==================== //
-
     // cv::Mat map_bb_x = cv::Mat::zeros(cv::Size(512, 667), CV_32FC1);
     cv::Mat map_bb_x = cv::Mat::zeros(cv::Size(cv_ptr->image.cols, cv_ptr->image.rows), CV_32FC1);
     cv::Mat map_bb_y = cv::Mat::zeros(cv::Size(cv_ptr->image.cols, cv_ptr->image.rows), CV_32FC1);

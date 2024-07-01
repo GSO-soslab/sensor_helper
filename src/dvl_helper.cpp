@@ -34,6 +34,8 @@ public:
         pub_pressure = nh_.advertise<sensor_msgs::FluidPressure>("/pressure",10);
         pub_pointcloud    = nh_.advertise<sensor_msgs::PointCloud2>("/pointcloud", 5);
 
+        nh_private_.param<double>("scale_glrc", scale_glrc_, 0.944666667);
+        nh_private_.param<double>("scale_alaska", scale_alaska_, 1.0);
 
         nh_private_.param<double>("sound_speed", sound_speed_, 1500);
         nh_private_.param<double>("beam_angle", beam_angle_, 25);
@@ -66,6 +68,8 @@ private:
 
     double sound_speed_;
     double beam_angle_;
+    double scale_glrc_;
+    double scale_alaska_;
 };
 
 void DvlHelper::glrcBtCallback(const nortek_dvl::ButtomTrack::ConstPtr& msg) {
@@ -93,9 +97,9 @@ void DvlHelper::glrcBtCallback(const nortek_dvl::ButtomTrack::ConstPtr& msg) {
     double beam_azimuth[] = {PI/4.0, -PI/4.0, -3.0*PI/4.0, 3.0*PI/4.0};
     for (int i = 0; i < 4; i++) {
         Eigen::Vector3d pt;
-        pt(0) = distance[i] * tan(beam_angle) * cos(beam_azimuth[i]);
-        pt(1) = distance[i] * tan(beam_angle) * sin(beam_azimuth[i]);
-        pt(2) = distance[i];
+        pt(0) = distance[i]  * scale_glrc_ * tan(beam_angle) * cos(beam_azimuth[i]);
+        pt(1) = distance[i]  * scale_glrc_ * tan(beam_angle) * sin(beam_azimuth[i]);
+        pt(2) = distance[i]  * scale_glrc_;
         points.push_back(pt);
     }
 
@@ -168,9 +172,9 @@ void DvlHelper::alaskaBtCallback(const ds_sensor_msgs::NortekDF21::ConstPtr& msg
     double beam_azimuth[] = {PI/4.0, -PI/4.0, -3.0*PI/4.0, 3.0*PI/4.0};
     for (int i = 0; i < 4; i++) {
         Eigen::Vector3d pt;
-        pt(0) = msg->distBeam[i] * tan(beam_angle) * cos(beam_azimuth[i]);
-        pt(1) = msg->distBeam[i] * tan(beam_angle) * sin(beam_azimuth[i]);
-        pt(2) = msg->distBeam[i];
+        pt(0) = msg->distBeam[i] * scale_alaska_ * tan(beam_angle) * cos(beam_azimuth[i]);
+        pt(1) = msg->distBeam[i] * scale_alaska_ * tan(beam_angle) * sin(beam_azimuth[i]);
+        pt(2) = msg->distBeam[i] * scale_alaska_;
         points.push_back(pt);
     }
 
